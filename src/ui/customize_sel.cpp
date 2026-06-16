@@ -15,6 +15,12 @@
 constexpr int32_t PreviewQueueIndex = 3;
 constexpr uint32_t SceneID = 14010150;
 
+struct PlayCustomizeSelFooterArgs
+{
+	std::string footer_name;
+	int32_t screen;
+};
+
 struct CSStateConfigNC
 {
 	bool window_open = false;
@@ -102,8 +108,10 @@ static void StoreSoundEffectConfig(int32_t index, const SelectorExtraData& ex_da
 
 class NCConfigWindow : public AetControl
 {
-protected:
+public:
 	static constexpr int32_t WindowPrio = 20;
+
+protected:
 	static constexpr int32_t MaxTabCount = 2;
 	static constexpr uint32_t PS4WinTitleSpriteID = 1861400143;
 
@@ -508,6 +516,21 @@ public:
 namespace customize_sel
 {
 	std::unique_ptr<NCConfigWindow> window;
+	std::unique_ptr<AetElement> footer_nc_key;
+	int32_t previous_device = InputDevice_Unknown;
+
+	static void AddFooterInputOption()
+	{
+		std::string layer_name =
+			(game::IsFutureToneMode() ? "ps4_" : "nsw_")
+			+ std::string("key_nc")
+			+ GetCurrentPlatformSuffix()
+			+ GetLanguageSuffix();
+
+		int32_t prio = game::IsFutureToneMode() ? NCConfigWindow::WindowPrio + 2 : NCConfigWindow::WindowPrio;
+		footer_nc_key = std::make_unique<AetElement>(SceneID);
+		footer_nc_key->SetLayer(layer_name, 0x20000, prio, 14, "", "", nullptr);
+	}
 
 	static bool CtrlWindow()
 	{
@@ -562,12 +585,21 @@ HOOK(bool, __fastcall, CustomizeSelTaskCtrl, 0x140687D70, uint64_t a1)
 			&& !spr::CheckSprSetLoading(14020060);
 	}
 
+	int32_t dev = diva::GetInputState(0)->GetDevice();
+	if (customize_sel::footer_nc_key && dev != customize_sel::previous_device)
+	{
+		customize_sel::AddFooterInputOption();
+		customize_sel::previous_device = dev;
+	}
+
 	return originalCustomizeSelTaskCtrl(a1);
 }
 
 HOOK(bool, __fastcall, CustomizeSelTaskDest, 0x140687D80, uint64_t a1)
 {
 	customize_sel::window.reset();
+	customize_sel::footer_nc_key.reset();
+	customize_sel::previous_device = InputDevice_Unknown;
 	sound::UnloadFarc("rom/sound/se_nc.farc");
 	sound::UnloadFarc("rom/sound/se_nc_option.farc");
 	aet::UnloadAetSet(14010060);
@@ -589,6 +621,21 @@ HOOK(void, __fastcall, CSTopMenuMainCtrl, 0x14069B610, uint64_t a1)
 	originalCSTopMenuMainCtrl(a1);
 }
 
+HOOK(void, __fastcall, PlayCustomizeSelFooter, 0x15F9811D0, void* a1, const PlayCustomizeSelFooterArgs& args)
+{
+	if (args.footer_name == "fotter01" && args.screen == 5)
+		customize_sel::AddFooterInputOption();
+	else
+		customize_sel::footer_nc_key.reset();
+	originalPlayCustomizeSelFooter(a1, args);
+}
+
+HOOK(void, __fastcall, StopCustomizeSelFooter, 0x140684A00, void* a1)
+{
+	customize_sel::footer_nc_key.reset();
+	originalStopCustomizeSelFooter(a1);
+}
+
 void InstallCustomizeSelHooks()
 {
 	INSTALL_HOOK(CustomizeSelTaskInit);
@@ -596,4 +643,6 @@ void InstallCustomizeSelHooks()
 	INSTALL_HOOK(CustomizeSelTaskDest);
 	INSTALL_HOOK(CustomizeSelTaskDisp);
 	INSTALL_HOOK(CSTopMenuMainCtrl);
+	INSTALL_HOOK(PlayCustomizeSelFooter);
+	INSTALL_HOOK(StopCustomizeSelFooter);
 }

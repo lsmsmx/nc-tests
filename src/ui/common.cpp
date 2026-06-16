@@ -413,6 +413,16 @@ std::string GetLanguageSuffix()
 	return suffixes[GetGameLocale()];
 }
 
+std::string GetCurrentPlatformSuffix()
+{
+	int32_t index = diva::GetInputState(0)->GetDevice();
+	if (index < 0 || index > 4)
+		return "";
+
+	const char* suffixes[5] = { "_xb", "_ps", "_sw", "_st", "_pc" };
+	return suffixes[index];
+}
+
 uint32_t FindSpriteID(std::string_view name)
 {
 	uint32_t* ptr = spr::GetSpriteId(nullptr, name);
