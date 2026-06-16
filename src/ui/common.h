@@ -205,3 +205,5 @@ diva::vec2 GetLayoutAdjustedPosition(const AetLayout& layout, std::string_view l
 void DrawSpriteAtLayout(const AetLayout& layout, std::string_view layer_name, uint32_t sprite_id, int32_t prio, int32_t res, bool adjust_pos = false);
 
 std::string GetLanguageSuffix();
+uint32_t FindSpriteID(std::string_view name);
+uint32_t FindSpriteIDWithLocale(std::string_view base_name);

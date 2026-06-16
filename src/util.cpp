@@ -77,3 +77,21 @@ bool util::Contains(std::string_view str, std::string_view substr)
 
 	return false;
 }
+
+std::string util::ToUpper(std::string_view view)
+{
+	std::string str;
+	str.reserve(view.size());
+
+	for (const char& c : view)
+		str += std::toupper(c);
+
+	return str;
+}
+
+std::string& util::ToUpperInPlace(std::string& str)
+{
+	for (auto& c : str)
+		c = std::toupper(c);
+	return str;
+}

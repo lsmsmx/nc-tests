@@ -49,6 +49,7 @@ namespace prj
 
 		string_range() : start(nullptr), end(nullptr) {}
 		string_range(const std::string& s) : start(s.c_str()), end(s.c_str() + s.size()) {}
+		string_range(const std::string_view& s) : start(s.data()), end(s.data() + s.size()) {}
 	};
 
 	template <class T>
@@ -1067,6 +1068,9 @@ namespace spr
 	// NOTE: Draw text to the screen (UTF-8, char*)
 	inline FUNCTION_PTR(void, __fastcall, DrawTextA, 0x1402C57B0, TextArgs* params, uint32_t flags, const char* text);
 	inline FUNCTION_PTR(void**, __fastcall, DrawSimpleText, 0x14027B160, float x, float y, int32_t res, int32_t prio, const char* text, bool center, uint32_t color, const diva::vec4* clip);
+
+	// FROM: https://github.com/vixen256/ps4/tree/master/src/diva.cpp
+	inline FUNCTION_PTR(uint32_t*, __fastcall, GetSpriteId, 0x1405BC8F0, void* a1, const prj::string_range& name);
 }
 
 namespace sound

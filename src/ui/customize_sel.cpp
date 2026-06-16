@@ -103,6 +103,10 @@ static void StoreSoundEffectConfig(int32_t index, const SelectorExtraData& ex_da
 class NCConfigWindow : public AetControl
 {
 protected:
+	static constexpr int32_t WindowPrio = 20;
+	static constexpr int32_t MaxTabCount = 2;
+	static constexpr uint32_t PS4WinTitleSpriteID = 1861400143;
+
 	bool finishing = false;
 	bool exit = false;
 	int32_t prev_selected_tab = 0;
@@ -116,32 +120,42 @@ protected:
 	std::vector<SelectorExtraData> user_data;
 	float win_opacity = 1.0f;
 	ConfigSet* config_set;
+	std::array<uint32_t, 3> number_sprites_mm;
+	std::array<uint32_t, 3> number_sprites_ft;
+	std::array<uint32_t, MaxTabCount> tab_info_sprites_mm;
+	std::array<uint32_t, MaxTabCount> tab_info_sprites_ft;
+	std::array<std::array<uint32_t, 5>, 2> option_info_sprites_mm;
+	std::array<std::array<uint32_t, 5>, 2> option_info_sprites_ft;
+	std::array<uint32_t, 3> sound_prio_sub_help_mm;
+	std::array<uint32_t, 3> sound_prio_sub_help_ft;
 
-	static constexpr int32_t WindowPrio = 20;
-	static constexpr int32_t MaxTabCount = 2;
-	static constexpr uint32_t NumberSprites[2][3] = {
-		{ 3084111403, 965335902,  268427239 }, // FT UI
-		{ 880817216,  1732835926, 3315147794 } // MM+ UI
-	};
-
-	static constexpr uint32_t TabInfoSprites[2][MaxTabCount] = {
-		{ 3180940432, 4017317092 }, // FT UI
-		{ 2099321196, 2806350346 }  // MM+ UI
-	};
-
-	static constexpr uint32_t OptionInfoSpritesMM[MaxTabCount][5] = {
-		{ 0, 0, 0, 0, 0 },
-		{ 1445577118, 2528592817, 2367656052, 3568576596, 0 }
-	};
-
-	static constexpr uint32_t OptionInfoSpritesPS4[MaxTabCount][5] = {
-		{ 0, 0, 0, 0, 0 },
-		{ 2211731674, 2257174132, 2940751399, 160436885, 0 }
-	};
-
-	static constexpr uint32_t SoundPrioSubhelpMM[3] = { 2163775515, 1748614505, 2008681813 };
-	static constexpr uint32_t SoundPrioSubhelpPS4[3] = { 2775564751, 2489232069, 3322578733 };
-	static constexpr uint32_t PS4WinTitleSpriteID = 1861400143;
+	void ResolveLocalizedSpriteIDs()
+	{
+		number_sprites_mm[0] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_00");
+		number_sprites_mm[1] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_01");
+		number_sprites_mm[2] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_02");
+		number_sprites_ft[0] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_00");
+		number_sprites_ft[1] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_01");
+		number_sprites_ft[2] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_02");
+		tab_info_sprites_mm[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS01");
+		tab_info_sprites_mm[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS02");
+		tab_info_sprites_ft[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS01");
+		tab_info_sprites_ft[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS02");
+		option_info_sprites_mm[1][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_06");
+		option_info_sprites_mm[1][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_07");
+		option_info_sprites_mm[1][2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_08");
+		option_info_sprites_mm[1][3] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_09");
+		option_info_sprites_ft[1][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_06");
+		option_info_sprites_ft[1][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_07");
+		option_info_sprites_ft[1][2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_08");
+		option_info_sprites_ft[1][3] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_09");
+		sound_prio_sub_help_mm[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_01");
+		sound_prio_sub_help_mm[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_02");
+		sound_prio_sub_help_mm[2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_03");
+		sound_prio_sub_help_ft[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_FT_01");
+		sound_prio_sub_help_ft[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_FT_02");
+		sound_prio_sub_help_ft[2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_FT_03");
+	}
 
 	void CreateWindowBase()
 	{
@@ -191,6 +205,7 @@ protected:
 public:
 	NCConfigWindow()
 	{
+		ResolveLocalizedSpriteIDs();
 		AllowInputsWhenBlocked(true);
 		config_set = nc::GetConfigSet();
 
@@ -240,25 +255,25 @@ public:
 
 		if (game::IsFutureToneMode())
 		{
-			DrawSpriteAt("p_num_n_c", NumberSprites[0][selected_tab + 1]);
-			DrawSpriteAt("p_num_d_c", NumberSprites[0][MaxTabCount]);
-			DrawSpriteAt("p_win_img_c", TabInfoSprites[0][selected_tab]);
+			DrawSpriteAt("p_num_n_c", number_sprites_ft[selected_tab + 1]);
+			DrawSpriteAt("p_num_d_c", number_sprites_ft[MaxTabCount]);
+			DrawSpriteAt("p_win_img_c", tab_info_sprites_ft[selected_tab]);
 			DrawSpriteAt("p_win_tit_lt", PS4WinTitleSpriteID);
-			help_loc.DrawSpriteAt("p_help_loc_c", OptionInfoSpritesPS4[selected_tab][selected_option]);
+			help_loc.DrawSpriteAt("p_help_loc_c", option_info_sprites_ft[selected_tab][selected_option]);
 
 			if (selected_tab == 1 && selected_option == 3)
-				subhelp_loc.DrawSpriteAt("p_subhelp_loc_c", SoundPrioSubhelpPS4[nc::GetSharedData().sound_prio]);
+				subhelp_loc.DrawSpriteAt("p_subhelp_loc_c", sound_prio_sub_help_ft[nc::GetSharedData().sound_prio]);
 		}
 		else
 		{
-			DrawSpriteAt("p_nc_page_num_10_c", NumberSprites[1][selected_tab + 1]);
-			DrawSpriteAt("p_nc_page_num_01_c", NumberSprites[1][MaxTabCount]);
-			DrawSpriteAt("p_nc_img_02_c", TabInfoSprites[1][prev_selected_tab]);
-			DrawSpriteAt("p_nc_img_01_c", TabInfoSprites[1][selected_tab]);
-			help_loc.DrawSpriteAt("p_help_loc_c", OptionInfoSpritesMM[selected_tab][selected_option]);
+			DrawSpriteAt("p_nc_page_num_10_c", number_sprites_mm[selected_tab + 1]);
+			DrawSpriteAt("p_nc_page_num_01_c", number_sprites_mm[MaxTabCount]);
+			DrawSpriteAt("p_nc_img_02_c", tab_info_sprites_mm[prev_selected_tab]);
+			DrawSpriteAt("p_nc_img_01_c", tab_info_sprites_mm[selected_tab]);
+			help_loc.DrawSpriteAt("p_help_loc_c", option_info_sprites_mm[selected_tab][selected_option]);
 
 			if (selected_tab == 1 && selected_option == 3)
-				subhelp_loc.DrawSpriteAt("p_subhelp_loc_c", SoundPrioSubhelpMM[nc::GetSharedData().sound_prio]);
+				subhelp_loc.DrawSpriteAt("p_subhelp_loc_c", sound_prio_sub_help_mm[nc::GetSharedData().sound_prio]);
 		}
 	}
 
@@ -316,7 +331,7 @@ public:
 		{
 			opt = std::make_unique<T>(
 				SceneID,
-				util::Format("ps4_options_base_nc_%02d_ft", id),
+				util::Format("ps4_options_base_nc_%02d_ft%s", id, GetLanguageSuffix().c_str()),
 				WindowPrio,
 				14
 			);
@@ -327,7 +342,7 @@ public:
 		{
 			opt = std::make_unique<T>(
 				SceneID,
-				util::Format("nsw_option_submenu_nc_%02d__f", id),
+				util::Format("nsw_option_submenu_nc_%02d__f%s", id, GetLanguageSuffix().c_str()),
 				WindowPrio,
 				14
 			);

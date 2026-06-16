@@ -412,3 +412,21 @@ std::string GetLanguageSuffix()
 	const char* suffixes[GameLocale_Max] = { "_jp", "_en", "_zh", "_tw", "_kr", "_fr", "_it", "_de", "_sp" };
 	return suffixes[GetGameLocale()];
 }
+
+uint32_t FindSpriteID(std::string_view name)
+{
+	uint32_t* ptr = spr::GetSpriteId(nullptr, name);
+	if (!ptr || *ptr == 0xFFFFFFFF)
+		return 0;
+	return *ptr;
+}
+
+uint32_t FindSpriteIDWithLocale(std::string_view base_name)
+{
+	std::string name = std::string(base_name) + util::ToUpper(GetLanguageSuffix());
+	uint32_t* ptr = spr::GetSpriteId(nullptr, name);
+
+	if (!ptr || *ptr == 0xFFFFFFFF)
+		return 0;
+	return *ptr;
+}
