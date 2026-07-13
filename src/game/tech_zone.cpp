@@ -70,6 +70,9 @@ void TechZoneDispState::Ctrl()
 	if (!data)
 		return;
 
+	if (GetState()->GetGameStyle() == GameStyle_Arcade && nc::GetSharedData().tech_zone_disp != 0)
+		return;
+
 	if (scene == 0 || layer_name.empty())
 	{
 		// TODO: Implement song's default style (?)

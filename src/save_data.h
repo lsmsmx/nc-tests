@@ -36,7 +36,9 @@ struct SharedData
 	int32_t stick_sensitivity = 50;
 	int32_t sound_prio = 0;
 	int32_t tech_zone_style = 1;
-	uint8_t reserved[236];
+	uint8_t tech_zone_disp = 0;
+	uint8_t star_control = 0;
+	uint8_t reserved[234];
 
 	SharedData()
 	{

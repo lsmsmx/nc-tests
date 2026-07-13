@@ -8,6 +8,7 @@
 #include "diva.h"
 #include "input.h"
 #include "nc_log.h"
+#include "save_data.h"
 
 constexpr int32_t NearFramesBaseCount = 3;
 constexpr float NearFramesBaseRate = 60.0f;
@@ -238,8 +239,11 @@ void MacroState::UpdateSticks(diva::InputState* input_state, const std::chrono::
 
 bool MacroState::GetStarHit() const
 {
-	if (diva::GetInputState(0)->GetDevice() != InputDevice_Keyboard)
-		return buttons[Button_LStick].IsTapped() || buttons[Button_RStick].IsTapped();
+	if (nc::GetSharedData().star_control == 0)
+	{
+		if (diva::GetInputState(0)->GetDevice() != InputDevice_Keyboard)
+			return buttons[Button_LStick].IsTapped() || buttons[Button_RStick].IsTapped();
+	}
 
 	return buttons[Button_L1].IsTapped() ||
 		buttons[Button_L2].IsTapped() ||
@@ -253,10 +257,13 @@ bool MacroState::GetStarHit() const
 
 bool MacroState::GetDoubleStarHit() const
 {
-	if (diva::GetInputState(0)->GetDevice() != InputDevice_Keyboard)
+	if (nc::GetSharedData().star_control == 0)
 	{
-		return (buttons[Button_LStick].IsTapped() && buttons[Button_RStick].IsTappedInNearFrames()) ||
-			(buttons[Button_RStick].IsTapped() && buttons[Button_LStick].IsTappedInNearFrames());
+		if (diva::GetInputState(0)->GetDevice() != InputDevice_Keyboard)
+		{
+			return (buttons[Button_LStick].IsTapped() && buttons[Button_RStick].IsTappedInNearFrames()) ||
+				(buttons[Button_RStick].IsTapped() && buttons[Button_LStick].IsTappedInNearFrames());
+		}
 	}
 
 	const int32_t buttons_left[] = {

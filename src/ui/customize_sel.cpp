@@ -15,6 +15,13 @@
 constexpr int32_t PreviewQueueIndex = 3;
 constexpr uint32_t SceneID = 14010150;
 
+enum ConfigTab
+{
+	ConfigTab_Sounds = 0,
+	ConfigTab_TechZone = 1,
+	ConfigTab_Other = 2
+};
+
 struct PlayCustomizeSelFooterArgs
 {
 	std::string footer_name;
@@ -112,7 +119,7 @@ public:
 	static constexpr int32_t WindowPrio = 20;
 
 protected:
-	static constexpr int32_t MaxTabCount = 2;
+	static constexpr int32_t MaxTabCount = 3;
 	static constexpr uint32_t PS4WinTitleSpriteID = 1861400143;
 
 	bool finishing = false;
@@ -128,12 +135,12 @@ protected:
 	std::vector<SelectorExtraData> user_data;
 	float win_opacity = 1.0f;
 	ConfigSet* config_set;
-	std::array<uint32_t, 3> number_sprites_mm;
-	std::array<uint32_t, 3> number_sprites_ft;
+	std::array<uint32_t, 4> number_sprites_mm;
+	std::array<uint32_t, 4> number_sprites_ft;
 	std::array<uint32_t, MaxTabCount> tab_info_sprites_mm;
 	std::array<uint32_t, MaxTabCount> tab_info_sprites_ft;
-	std::array<std::array<uint32_t, 5>, 2> option_info_sprites_mm;
-	std::array<std::array<uint32_t, 5>, 2> option_info_sprites_ft;
+	std::array<std::array<uint32_t, 5>, MaxTabCount> option_info_sprites_mm;
+	std::array<std::array<uint32_t, 5>, MaxTabCount> option_info_sprites_ft;
 	std::array<uint32_t, 3> sound_prio_sub_help_mm;
 	std::array<uint32_t, 3> sound_prio_sub_help_ft;
 
@@ -142,21 +149,29 @@ protected:
 		number_sprites_mm[0] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_00");
 		number_sprites_mm[1] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_01");
 		number_sprites_mm[2] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_02");
+		number_sprites_mm[3] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_NC_NUM_03");
 		number_sprites_ft[0] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_00");
 		number_sprites_ft[1] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_01");
 		number_sprites_ft[2] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_02");
-		tab_info_sprites_mm[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS01");
-		tab_info_sprites_mm[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS02");
-		tab_info_sprites_ft[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS01");
-		tab_info_sprites_ft[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS02");
-		option_info_sprites_mm[1][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_06");
-		option_info_sprites_mm[1][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_07");
-		option_info_sprites_mm[1][2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_08");
-		option_info_sprites_mm[1][3] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_09");
-		option_info_sprites_ft[1][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_06");
-		option_info_sprites_ft[1][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_07");
-		option_info_sprites_ft[1][2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_08");
-		option_info_sprites_ft[1][3] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_09");
+		number_sprites_ft[3] = FindSpriteID("SPR_NSWGAM_NCWIN_WIN_HELP_NUM_FT_03");
+		tab_info_sprites_mm[ConfigTab_Sounds] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS01");
+		tab_info_sprites_mm[ConfigTab_TechZone] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS03");
+		tab_info_sprites_mm[ConfigTab_Other] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_OPTIONS02");
+		tab_info_sprites_ft[ConfigTab_Sounds] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS01");
+		tab_info_sprites_ft[ConfigTab_TechZone] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS03");
+		tab_info_sprites_ft[ConfigTab_Other] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_OPTIONS02");
+		option_info_sprites_mm[ConfigTab_Other][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_06");
+		option_info_sprites_mm[ConfigTab_Other][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_07");
+		option_info_sprites_mm[ConfigTab_Other][2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_08");
+		option_info_sprites_mm[ConfigTab_Other][3] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_09");
+		option_info_sprites_mm[ConfigTab_TechZone][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_11");
+		option_info_sprites_mm[ConfigTab_TechZone][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_10");
+		option_info_sprites_ft[ConfigTab_Other][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_06");
+		option_info_sprites_ft[ConfigTab_Other][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_07");
+		option_info_sprites_ft[ConfigTab_Other][2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_08");
+		option_info_sprites_ft[ConfigTab_Other][3] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_09");
+		option_info_sprites_ft[ConfigTab_TechZone][0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_11");
+		option_info_sprites_ft[ConfigTab_TechZone][1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_TXT_NC_FT_10");
 		sound_prio_sub_help_mm[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_01");
 		sound_prio_sub_help_mm[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_02");
 		sound_prio_sub_help_mm[2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_03");
@@ -194,12 +209,12 @@ protected:
 
 		if (game::IsFutureToneMode())
 		{
-			layer_name = util::Format("ps4_base_nc_anm_%02d", page_num);
+			layer_name = "ps4_base_nc_anm_01";
 			action = AetAction_InLoop;
 		}
 		else
 		{
-			layer_name = util::Format("nsw_submenu_nc_anm_%02d", page_num);
+			layer_name = "nsw_submenu_nc_anm_01";
 			action = AetAction_None;
 		}
 
@@ -280,7 +295,7 @@ public:
 			DrawSpriteAt("p_nc_img_01_c", tab_info_sprites_mm[selected_tab]);
 			help_loc.DrawSpriteAt("p_help_loc_c", option_info_sprites_mm[selected_tab][selected_option]);
 
-			if (selected_tab == 1 && selected_option == 3)
+			if (selected_tab == ConfigTab_Other && selected_option == 2)
 				subhelp_loc.DrawSpriteAt("p_subhelp_loc_c", sound_prio_sub_help_mm[nc::GetSharedData().sound_prio]);
 		}
 	}
@@ -416,7 +431,7 @@ public:
 		selectors.clear();
 		user_data.clear();
 		user_data.reserve(20);
-		if (selected_tab == 0)
+		if (selected_tab == ConfigTab_Sounds)
 		{
 			// TODO: Change the sound effect names (maybe?) and the "Same as" text to STR ARRAY
 			//       string to allow localization.
@@ -426,29 +441,21 @@ public:
 			putSoundEffectList(4, 4, *sound_db::GetLinkSoundDB(),         2, &config_set->link_se_id); 
 			putSoundEffectList(5, 5, *sound_db::GetStarWSoundDB(),        2, &config_set->star_w_se_id);
 		}
-		else if (selected_tab == 1)
+		else if (selected_tab == ConfigTab_TechZone)
 		{
-			auto* sens = CreateOptionElement<HorizontalSelectorNumber, HorizontalSelectorNumber::Notifier>(6, 1);
-			sens->value_min = 20.0f;
-			sens->value_max = 80.0f;
-			sens->SetValue(nc::GetSharedData().stick_sensitivity);
-			sens->format_string = "%.0f%%";
-			sens->SetOnChangeNotifier([](float v) { nc::GetSharedData().stick_sensitivity = v; });
+			auto* disp = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(11, 1);
+			disp->values.emplace_back(loc::GetString(6260)); // Always
+			disp->values.emplace_back(loc::GetString(6261)); // Console/Mixed Only
+			disp->selected_index = nc::GetSharedData().tech_zone_disp;
+			disp->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().tech_zone_disp = index; });
 
-			auto* ctrl_se = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(7, 2);
-			ctrl_se->values.push_back("Slide");
-			ctrl_se->values.push_back("Star");
-			ctrl_se->selected_index = nc::GetSharedData().stick_control_se;
-			ctrl_se->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().stick_control_se = index; });
-			ctrl_se->SetPreviewNotifier(PlayControlSEPreview);
-
-			auto* tz = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(8, 3);
+			auto* tz = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(10, 2);
 			tz->values.push_back("F");
 			tz->values.push_back("F 2nd");
 			tz->values.push_back("X");
 			tz->values.push_back("Future Tone");
-			tz->values.push_back("Mega Mix+");
-			tz->values.push_back("Match UI");
+			tz->values.emplace_back(loc::GetString(6254)); // Mega Mix+
+			tz->values.emplace_back(loc::GetString(6255)); // Match UI
 
 			int32_t tz_style = nc::GetSharedData().tech_zone_style;
 			switch (tz_style)
@@ -490,12 +497,34 @@ public:
 					break;
 				}
 			});
+		}
+		else if (selected_tab == ConfigTab_Other)
+		{
+			auto* sens = CreateOptionElement<HorizontalSelectorNumber, HorizontalSelectorNumber::Notifier>(6, 1);
+			sens->value_min = 20.0f;
+			sens->value_max = 80.0f;
+			sens->SetValue(nc::GetSharedData().stick_sensitivity);
+			sens->format_string = "%.0f%%";
+			sens->SetOnChangeNotifier([](float v) { nc::GetSharedData().stick_sensitivity = v; });
 
-			auto* snd = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(9, 4);
+			auto* ctrl_se = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(7, 2);
+			ctrl_se->values.push_back("Slide");
+			ctrl_se->values.push_back("Star");
+			ctrl_se->selected_index = nc::GetSharedData().stick_control_se;
+			ctrl_se->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().stick_control_se = index; });
+			ctrl_se->SetPreviewNotifier(PlayControlSEPreview);
+
+			auto* snd = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(8, 3);
 			snd->values.push_back("Disabled");
 			snd->values.push_back("Mute");
 			snd->selected_index = nc::GetSharedData().sound_prio > 0 ? 1 : 0;
 			snd->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().sound_prio = (index == 1 ? 2 : 0); });
+
+			auto* star_ctrl = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(9, 4);
+			star_ctrl->values.push_back("Sticks Only");
+			star_ctrl->values.push_back("Slide Macros");
+			star_ctrl->selected_index = nc::GetSharedData().star_control;
+			star_ctrl->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().star_control = index; });
 		}
 
 		SetSelectorIndex(0);
