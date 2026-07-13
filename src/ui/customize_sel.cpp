@@ -116,7 +116,7 @@ static void StoreSoundEffectConfig(int32_t index, const SelectorExtraData& ex_da
 class NCConfigWindow : public AetControl
 {
 public:
-	static constexpr int32_t WindowPrio = 20;
+	static constexpr int32_t WindowPrio = 23;
 
 protected:
 	static constexpr int32_t MaxTabCount = 3;
@@ -185,11 +185,11 @@ protected:
 		if (game::IsFutureToneMode())
 		{
 			fade_base.SetScene(SceneID);
-			fade_base.SetLayer("ps4_help_win_bg", WindowPrio - 1, 14, AetAction_InLoop);
+			fade_base.SetLayer("ps4_help_win_bg", WindowPrio, 14, AetAction_InLoop);
 			help_loc.SetScene(SceneID);
-			help_loc.SetLayer("ps4_nc_help_loc", WindowPrio + 1, 14, AetAction_InLoop);
+			help_loc.SetLayer("ps4_nc_help_loc", WindowPrio, 14, AetAction_InLoop);
 			subhelp_loc.SetScene(SceneID);
-			subhelp_loc.SetLayer("ps4_nc_subhelp_loc", WindowPrio + 1, 14, AetAction_InLoop);
+			subhelp_loc.SetLayer("ps4_nc_subhelp_loc", WindowPrio, 14, AetAction_InLoop);
 			SetLayer("ps4_help_win_l_back_t", WindowPrio, 14, AetAction_InLoop);
 		}
 		else
@@ -556,7 +556,7 @@ namespace customize_sel
 			+ GetCurrentPlatformSuffix()
 			+ GetLanguageSuffix();
 
-		int32_t prio = game::IsFutureToneMode() ? NCConfigWindow::WindowPrio + 2 : NCConfigWindow::WindowPrio;
+		int32_t prio = game::IsFutureToneMode() ? 22 : 20;
 		footer_nc_key = std::make_unique<AetElement>(SceneID);
 		footer_nc_key->SetLayer(layer_name, 0x20000, prio, 14, "", "", nullptr);
 	}
