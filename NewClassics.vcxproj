@@ -182,6 +182,7 @@ echo "Post-build script was not found."
     <ClCompile Include="include\safetyhook\src\Zydis.c" />
     <ClCompile Include="src\db.cpp" />
     <ClCompile Include="src\diva.cpp" />
+    <ClCompile Include="src\exports.cpp" />
     <ClCompile Include="src\game\chance_time.cpp" />
     <ClCompile Include="src\game\dsc.cpp" />
     <ClCompile Include="src\game\game.cpp" />
@@ -210,6 +211,7 @@ echo "Post-build script was not found."
     <ClCompile Include="src\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\build_info.h" />
     <ClInclude Include="src\db.h" />
     <ClInclude Include="src\game\dsc.h" />
     <ClInclude Include="src\game\score.h" />
