@@ -210,12 +210,12 @@ protected:
 
 		if (game::IsFutureToneMode())
 		{
-			layer_name = "ps4_base_nc_anm_01";
+			layer_name = "ps4_base_nc_anm";
 			action = AetAction_InLoop;
 		}
 		else
 		{
-			layer_name = "nsw_submenu_nc_anm_01";
+			layer_name = "nsw_submenu_nc_anm";
 			action = AetAction_None;
 		}
 
