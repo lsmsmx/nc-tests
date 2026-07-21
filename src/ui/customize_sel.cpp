@@ -522,8 +522,8 @@ public:
 			snd->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().sound_prio = (index == 1 ? 2 : 0); });
 
 			auto* star_ctrl = CreateOptionElement<HorizontalSelectorMulti, HorizontalSelectorMulti::Notifier>(9, 4);
-			star_ctrl->values.push_back("Sticks Only");
-			star_ctrl->values.push_back("Slide Macros");
+			star_ctrl->values.emplace_back(loc::GetString(6265));
+			star_ctrl->values.emplace_back(loc::GetString(6266));
 			star_ctrl->selected_index = nc::GetSharedData().star_control;
 			star_ctrl->SetOnChangeNotifier([](int32_t index) { nc::GetSharedData().star_control = index; });
 		}
