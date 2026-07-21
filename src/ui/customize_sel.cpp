@@ -120,7 +120,6 @@ public:
 
 protected:
 	static constexpr int32_t MaxTabCount = 3;
-	static constexpr uint32_t PS4WinTitleSpriteID = 1861400143;
 
 	bool finishing = false;
 	bool exit = false;
@@ -143,6 +142,7 @@ protected:
 	std::array<std::array<uint32_t, 5>, MaxTabCount> option_info_sprites_ft;
 	std::array<uint32_t, 3> sound_prio_sub_help_mm;
 	std::array<uint32_t, 3> sound_prio_sub_help_ft;
+	uint32_t ft_win_title_sprite_id;
 
 	void ResolveLocalizedSpriteIDs()
 	{
@@ -178,6 +178,7 @@ protected:
 		sound_prio_sub_help_ft[0] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_FT_01");
 		sound_prio_sub_help_ft[1] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_FT_02");
 		sound_prio_sub_help_ft[2] = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_HELP_SUBTXT_NC_FT_03");
+		ft_win_title_sprite_id = FindSpriteIDWithLocale("SPR_NSWGAM_NCWIN_NC_CUSTOM_FT_TITLE");
 	}
 
 	void CreateWindowBase()
@@ -281,7 +282,7 @@ public:
 			DrawSpriteAt("p_num_n_c", number_sprites_ft[selected_tab + 1]);
 			DrawSpriteAt("p_num_d_c", number_sprites_ft[MaxTabCount]);
 			DrawSpriteAt("p_win_img_c", tab_info_sprites_ft[selected_tab]);
-			DrawSpriteAt("p_win_tit_lt", PS4WinTitleSpriteID);
+			DrawSpriteAt("p_win_tit_lt", ft_win_title_sprite_id);
 			help_loc.DrawSpriteAt("p_help_loc_c", option_info_sprites_ft[selected_tab][selected_option]);
 
 			if (selected_tab == 1 && selected_option == 3)
