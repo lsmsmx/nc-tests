@@ -1,0 +1,30 @@
+name: Build NewClassics PC Mod
+
+on:
+  push:
+    branches: [ "master", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build NewClassics
+
+      run: msbuild NewClassics.sln /p:Configuration=Release /p:Platform=x64
+
+    - name: Upload DLL
+      uses: actions/upload-artifact@v4
+      with:
+        name: NewClassics-PC-DLL
+
+        path: 'x64/Release/*.dll'
