@@ -6,12 +6,24 @@
 #include "common.h"
 #include "result.h"
 
+// --- ЖЕЛЕЗОБЕТОННЫЙ ЛОГГЕР ---
+#include <windows.h>
 #include <stdio.h>
 #include <stdarg.h>
 
 static void PC_LOG(const char* format, ...) {
-    
-    FILE* f = fopen("nc_pc_debug_log.txt", "a");
+    static char logPath[MAX_PATH] = {0};
+    // Один раз узнаем точный путь до нашего .dll мода
+    if (logPath[0] == 0) {
+        HMODULE hMod;
+        GetModuleHandleExA(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCSTR)&PC_LOG, &hMod);
+        GetModuleFileNameA(hMod, logPath, MAX_PATH);
+        char* lastSlash = strrchr(logPath, '\\');
+        if (lastSlash) *lastSlash = '\0'; // Отрезаем имя файла
+        strcat_s(logPath, MAX_PATH, "\\nc_pc_debug_log.txt"); // Приклеиваем имя лога
+    }
+
+    FILE* f = fopen(logPath, "a");
     if (!f) return;
     va_list args;
     va_start(args, format);
@@ -20,7 +32,6 @@ static void PC_LOG(const char* format, ...) {
     fprintf(f, "\n");
     fclose(f);
 }
-// ------------------------------------------
 
 struct CAetController
 {
